@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  reports   Report[]
+  createdAt DateTime @default(now())
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  title       String
+  category    String
+  description String   @db.Text
+  imageUrl    String?
+  isAnonymous Boolean  @default(false)
+  adminComment String? @db.Text
+  status      Status   @default(PENDING)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  PROCESSING
+  RESOLVED
+}

@@ -1,0 +1,55 @@
+{
+  "login": {
+    "welcome": "Selamat Datang!",
+    "subtitle": "Masuk ke akun CampusCare Anda",
+    "username": "Nama Pengguna",
+    "password": "Kata Sandi",
+    "signin": "Masuk",
+    "signing_in": "Sedang masuk...",
+    "no_account": "Belum punya akun?",
+    "register_here": "Daftar di sini"
+  },
+  "dashboard": {
+    "my_reports": "Laporan Saya",
+    "my_reports_sub": "Lacak dan kelola kendala kampus Anda",
+    "create_report": "Buat Laporan",
+    "no_reports": "Belum ada laporan",
+    "no_reports_sub": "Buat laporan pertama Anda untuk memulai",
+    "pending": "Menunggu",
+    "processing": "Diproses",
+    "resolved": "Selesai"
+  },
+  "report_form": {
+    "title": "Buat Laporan Baru",
+    "title_label": "Judul",
+    "title_placeholder": "Deskripsi singkat kendala",
+    "category": "Kategori",
+    "desc_label": "Deskripsi",
+    "desc_placeholder": "Berikan detail tentang masalah...",
+    "image": "Lampirkan Gambar (Opsional)",
+    "cancel": "Batal",
+    "submit": "Kirim Laporan",
+    "submitting": "Mengirim...",
+    "confirm_delete": "Apakah Anda yakin ingin menghapus laporan ini?"
+  },
+  "admin": {
+    "title": "Dasbor Admin",
+    "subtitle": "Kelola dan selesaikan kendala kampus",
+    "search": "Cari laporan...",
+    "all_status": "Semua Status",
+    "report_details": "Detail Laporan",
+    "category": "Kategori",
+    "reporter": "Pelapor",
+    "status": "Status",
+    "actions": "Aksi",
+    "no_reports": "Tidak ada laporan ditemukan.",
+    "set_pending": "Tandai Menunggu",
+    "set_processing": "Tandai Diproses",
+    "set_resolved": "Tandai Selesai"
+  },
+  "layout": {
+    "dashboard": "Dasbor",
+    "logout": "Keluar",
+    "welcome": "Selamat datang"
+  }
+}
