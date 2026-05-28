@@ -116,7 +116,8 @@ const AdminDashboard = () => {
   const getImageUrl = (url?: string | null) => {
     if (!url) return '';
     if (url.startsWith('http') || url.startsWith('blob:')) return url;
-    const baseUrl = import.meta.env.VITE_API_URL || '';
+    let baseUrl = import.meta.env.VITE_API_URL || '';
+    baseUrl = baseUrl.replace(/\/api\/?$/, ''); // Remove /api if present
     return `${baseUrl.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
   };
 
@@ -216,7 +217,16 @@ const AdminDashboard = () => {
                              className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden hidden sm:block relative cursor-pointer group/image"
                              onClick={() => setViewImage(getImageUrl(report.imageUrl as string))}
                            >
-                             <img src={getImageUrl(report.imageUrl)} alt="Report" className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-300" />
+                             <img 
+                               src={getImageUrl(report.imageUrl)} 
+                               alt="Report" 
+                               className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-300" 
+                               onError={(e) => {
+                                 const target = e.target as HTMLImageElement;
+                                 target.onerror = null; // Prevent infinite loop
+                                 target.src = 'https://placehold.co/400x400/f8fafc/94a3b8?text=Gambar+Hilang';
+                               }}
+                             />
                              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 flex items-center justify-center transition-colors">
                                <ImageIcon className="w-4 h-4 text-white opacity-0 group-hover/image:opacity-100" />
                              </div>

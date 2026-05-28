@@ -68,7 +68,8 @@ const StudentDashboard = () => {
   const getImageUrl = (url?: string | null) => {
     if (!url) return '';
     if (url.startsWith('http') || url.startsWith('blob:')) return url;
-    const baseUrl = import.meta.env.VITE_API_URL || '';
+    let baseUrl = import.meta.env.VITE_API_URL || '';
+    baseUrl = baseUrl.replace(/\/api\/?$/, ''); // Remove /api if present
     return `${baseUrl.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
   };
 
@@ -199,7 +200,16 @@ const StudentDashboard = () => {
                   className="h-48 w-full bg-slate-100 dark:bg-slate-900 relative overflow-hidden cursor-pointer"
                   onClick={() => setViewImage(getImageUrl(report.imageUrl as string))}
                 >
-                  <img src={getImageUrl(report.imageUrl)} alt="Report attachment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <img 
+                    src={getImageUrl(report.imageUrl)} 
+                    alt="Report attachment" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = 'https://placehold.co/600x400/f8fafc/94a3b8?text=Gambar+Hilang';
+                    }}
+                  />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                     <ImageIcon className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>

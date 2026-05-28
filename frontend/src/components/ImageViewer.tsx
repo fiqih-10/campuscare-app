@@ -55,6 +55,11 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ src, alt, onClose }) => {
           src={src} 
           alt={alt} 
           className="max-w-none max-h-[90vh] object-contain rounded-sm shadow-2xl" 
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = 'https://placehold.co/800x600/f8fafc/94a3b8?text=Gambar+Hilang';
+          }}
         />
       </div>
     </div>
