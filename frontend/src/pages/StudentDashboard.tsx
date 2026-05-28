@@ -65,6 +65,13 @@ const StudentDashboard = () => {
     }
   };
 
+  const getImageUrl = (url?: string | null) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('blob:')) return url;
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    return `${baseUrl.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -91,7 +98,7 @@ const StudentDashboard = () => {
     setDescription(report.description);
     setIsAnonymous(report.isAnonymous);
     setImageFile(null);
-    setImagePreview(report.imageUrl ? report.imageUrl : null);
+    setImagePreview(report.imageUrl ? getImageUrl(report.imageUrl) : null);
     setIsModalOpen(true);
   };
 
@@ -167,12 +174,22 @@ const StudentDashboard = () => {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {reports.length === 0 ? (
-          <div className="col-span-full py-12 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 border-dashed transition-colors">
-            <div className="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4">
-              <FileText className="w-8 h-8 text-slate-300 dark:text-slate-500" />
+          <div className="col-span-full py-16 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 transition-colors animate-in fade-in zoom-in duration-500 shadow-sm">
+            <div className="relative mb-5">
+               <div className="absolute inset-0 bg-indigo-100 dark:bg-indigo-900/30 rounded-full animate-ping opacity-75"></div>
+               <div className="relative w-20 h-20 bg-indigo-50 dark:bg-slate-700/50 rounded-full flex items-center justify-center border-2 border-indigo-100 dark:border-indigo-900/50">
+                 <FileText className="w-10 h-10 text-indigo-500 dark:text-indigo-400" />
+               </div>
             </div>
-            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200">{t('dashboard.no_reports')}</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('dashboard.no_reports_sub')}</p>
+            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t('dashboard.no_reports')}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm text-center mb-6">{t('dashboard.no_reports_sub')}</p>
+            <button
+              onClick={openCreateModal}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 dark:shadow-none transition-all duration-200 hover:scale-105"
+            >
+              <PlusCircle className="w-5 h-5" />
+              Buat Laporan Pertama
+            </button>
           </div>
         ) : (
           reports.map(report => (
@@ -180,9 +197,9 @@ const StudentDashboard = () => {
               {report.imageUrl && (
                 <div 
                   className="h-48 w-full bg-slate-100 dark:bg-slate-900 relative overflow-hidden cursor-pointer"
-                  onClick={() => setViewImage(report.imageUrl as string)}
+                  onClick={() => setViewImage(getImageUrl(report.imageUrl as string))}
                 >
-                  <img src={report.imageUrl} alt="Report attachment" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={getImageUrl(report.imageUrl)} alt="Report attachment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                     <ImageIcon className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>

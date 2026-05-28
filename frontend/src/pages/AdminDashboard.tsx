@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import { Clock, CheckCircle2, AlertCircle, LayoutList, Search, Image as ImageIcon, Trash2, Edit } from 'lucide-react';
+import { Clock, CheckCircle2, AlertCircle, LayoutList, Search, Image as ImageIcon, Trash2, Edit, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import ImageViewer from '../components/ImageViewer';
@@ -113,6 +113,18 @@ const AdminDashboard = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const getImageUrl = (url?: string | null) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('blob:')) return url;
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    return `${baseUrl.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+  };
+
+  const totalReports = reports.length;
+  const pendingReports = reports.filter(r => r.status === 'PENDING').length;
+  const processingReports = reports.filter(r => r.status === 'PROCESSING').length;
+  const resolvedReports = reports.filter(r => r.status === 'RESOLVED').length;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors">
@@ -145,6 +157,26 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* Mini Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-1 transition-all hover:scale-105 hover:shadow-md duration-300">
+          <span className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Laporan</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2"><FileText className="w-5 h-5 text-indigo-500" /> {totalReports}</span>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-1 transition-all hover:scale-105 hover:shadow-md duration-300">
+          <span className="text-amber-600 dark:text-amber-500 text-xs font-semibold uppercase tracking-wider">Menunggu</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2"><Clock className="w-5 h-5 text-amber-500" /> {pendingReports}</span>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-1 transition-all hover:scale-105 hover:shadow-md duration-300">
+          <span className="text-blue-600 dark:text-blue-500 text-xs font-semibold uppercase tracking-wider">Diproses</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2"><AlertCircle className="w-5 h-5 text-blue-500" /> {processingReports}</span>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-1 transition-all hover:scale-105 hover:shadow-md duration-300">
+          <span className="text-emerald-600 dark:text-emerald-500 text-xs font-semibold uppercase tracking-wider">Selesai</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-emerald-500" /> {resolvedReports}</span>
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
@@ -160,11 +192,18 @@ const AdminDashboard = () => {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
               {filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-700 mb-3">
-                      <LayoutList className="w-6 h-6 text-slate-400 dark:text-slate-500" />
+                  <td colSpan={5} className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
+                      <div className="relative mb-4">
+                        <div className="absolute inset-0 bg-indigo-100 dark:bg-indigo-900/30 rounded-full animate-ping opacity-75"></div>
+                        <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-50 dark:bg-slate-800 border-2 border-indigo-100 dark:border-indigo-900/50">
+                          <LayoutList className="w-8 h-8 text-indigo-500 dark:text-indigo-400" />
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">Belum ada laporan</h3>
+                      <p className="text-slate-500 dark:text-slate-400 font-medium mb-4 max-w-sm mx-auto">Saat ini belum ada laporan yang masuk atau sesuai dengan filter Anda.</p>
+                      <button onClick={() => {setSearchTerm(''); setFilterStatus('ALL');}} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-colors">Reset Filter</button>
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium">{t('admin.no_reports')}</p>
                   </td>
                 </tr>
               ) : (
@@ -174,12 +213,12 @@ const AdminDashboard = () => {
                       <div className="flex gap-4">
                         {report.imageUrl && (
                            <div 
-                             className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden hidden sm:block relative cursor-pointer"
-                             onClick={() => setViewImage(report.imageUrl as string)}
+                             className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden hidden sm:block relative cursor-pointer group/image"
+                             onClick={() => setViewImage(getImageUrl(report.imageUrl as string))}
                            >
-                             <img src={report.imageUrl} alt="Report" className="w-full h-full object-cover" />
+                             <img src={getImageUrl(report.imageUrl)} alt="Report" className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-300" />
                              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 flex items-center justify-center transition-colors">
-                               <ImageIcon className="w-4 h-4 text-white opacity-0 group-hover:opacity-100" />
+                               <ImageIcon className="w-4 h-4 text-white opacity-0 group-hover/image:opacity-100" />
                              </div>
                            </div>
                         )}
