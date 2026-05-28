@@ -4,11 +4,21 @@ import { authenticateToken, AuthRequest } from '../middleware/authMiddleware';
 import { io } from '../server';
 
 import multer from 'multer';
-import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../../uploads')),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'campuscare',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+  } as any,
 });
 const upload = multer({ storage });
 
@@ -18,7 +28,7 @@ const router = Router();
 router.post('/', authenticateToken, upload.single('image'), async (req: AuthRequest, res: Response) => {
   const { title, category, description, isAnonymous } = req.body;
   const userId = req.user?.id;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  const imageUrl = req.file ? req.file.path : null;
 
   if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
@@ -151,7 +161,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req: AuthRe
     };
 
     if (req.file) {
-      data.imageUrl = `/uploads/${req.file.filename}`;
+      data.imageUrl = req.file.path;
     }
 
     const updatedReport = await prisma.report.update({
