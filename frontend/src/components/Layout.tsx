@@ -137,14 +137,16 @@ const Layout = () => {
           <div className="flex-1" />
           
           <div className="flex items-center gap-3 sm:gap-4">
-            <button
-              onClick={() => setShowGuide(true)}
-              className="flex items-center gap-2 p-2 sm:px-3 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors font-medium text-sm"
-              title="Panduan Singkat"
-            >
-              <FileText className="w-5 h-5" />
-              <span className="hidden sm:inline">Panduan Singkat</span>
-            </button>
+            {user?.role === 'STUDENT' && (
+              <button
+                onClick={() => setShowGuide(true)}
+                className="flex items-center gap-2 p-2 sm:px-3 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors font-medium text-sm"
+                title="Panduan Singkat"
+              >
+                <FileText className="w-5 h-5" />
+                <span className="hidden sm:inline">Panduan Singkat</span>
+              </button>
+            )}
             <button
               onClick={toggleDarkMode}
               className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
