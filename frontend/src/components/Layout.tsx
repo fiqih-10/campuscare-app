@@ -3,6 +3,8 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, LayoutDashboard, Menu, X, User as UserIcon, Globe, Moon, Sun, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Footer from './Footer';
+import FeedbackWidget from './FeedbackWidget';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -141,12 +143,16 @@ const Layout = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-4 lg:p-8">
-          <div className="max-w-6xl mx-auto">
-            <Outlet />
+        <div className="flex-1 overflow-auto flex flex-col">
+          <div className="p-4 lg:p-8 flex-1">
+            <div className="max-w-6xl mx-auto">
+              <Outlet />
+            </div>
           </div>
+          <Footer />
         </div>
       </main>
+      <FeedbackWidget />
     </div>
   );
 };
