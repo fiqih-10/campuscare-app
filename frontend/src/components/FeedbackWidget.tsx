@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const FeedbackWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { token } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!feedback.trim()) return;
     
-    // In a real app, this would send to an API
-    console.log('Feedback submitted:', feedback);
-    setSubmitted(true);
-    setTimeout(() => {
-      setIsOpen(false);
-      setSubmitted(false);
-      setFeedback('');
-    }, 3000);
+    try {
+      await axios.post('/api/feedbacks', { message: feedback }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSubmitted(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setSubmitted(false);
+        setFeedback('');
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to submit feedback', error);
+      alert('Gagal mengirim masukan. Silakan coba lagi.');
+    }
   };
 
   return (

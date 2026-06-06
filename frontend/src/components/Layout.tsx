@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, Menu, X, User as UserIcon, Globe, Moon, Sun, ShieldAlert } from 'lucide-react';
+import { LogOut, LayoutDashboard, Menu, X, User as UserIcon, Globe, Moon, Sun, ShieldAlert, FileText, CheckCircle2, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Footer from './Footer';
 import FeedbackWidget from './FeedbackWidget';
@@ -12,6 +12,7 @@ const Layout = () => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -78,17 +79,30 @@ const Layout = () => {
           </button>
 
           {user?.role === 'ADMIN' && (
-            <button
-              onClick={() => navigate('/admin/users')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
-                location.pathname.includes('/admin/users')
-                  ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 shadow-sm shadow-indigo-100 dark:shadow-none'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-indigo-600 dark:hover:text-indigo-400'
-              }`}
-            >
-              <ShieldAlert className="w-5 h-5" />
-              Kelola Admin
-            </button>
+            <>
+              <button
+                onClick={() => navigate('/admin/users')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
+                  location.pathname.includes('/admin/users')
+                    ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 shadow-sm shadow-indigo-100 dark:shadow-none'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-indigo-600 dark:hover:text-indigo-400'
+                }`}
+              >
+                <ShieldAlert className="w-5 h-5" />
+                Kelola Admin
+              </button>
+              <button
+                onClick={() => navigate('/admin/feedbacks')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
+                  location.pathname.includes('/admin/feedbacks')
+                    ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 shadow-sm shadow-indigo-100 dark:shadow-none'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-indigo-600 dark:hover:text-indigo-400'
+                }`}
+              >
+                <MessageSquare className="w-5 h-5" />
+                Saran & Kritik
+              </button>
+            </>
           )}
         </nav>
 
@@ -124,6 +138,14 @@ const Layout = () => {
           
           <div className="flex items-center gap-3 sm:gap-4">
             <button
+              onClick={() => setShowGuide(true)}
+              className="flex items-center gap-2 p-2 sm:px-3 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors font-medium text-sm"
+              title="Panduan Singkat"
+            >
+              <FileText className="w-5 h-5" />
+              <span className="hidden sm:inline">Panduan Singkat</span>
+            </button>
+            <button
               onClick={toggleDarkMode}
               className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               title="Toggle Dark Mode"
@@ -152,7 +174,41 @@ const Layout = () => {
           <Footer />
         </div>
       </main>
-      <FeedbackWidget />
+      {user?.role === 'STUDENT' && <FeedbackWidget />}
+
+      {showGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setShowGuide(false)}></div>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh] transition-colors animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-gradient-to-r from-indigo-500 to-purple-600">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <FileText className="w-6 h-6" />
+                Panduan Singkat: Cara Membuat Laporan
+              </h2>
+              <button onClick={() => setShowGuide(false)} className="text-white hover:text-indigo-100 transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900">
+              <ol className="list-decimal list-inside space-y-3 mb-6 text-slate-700 dark:text-slate-300">
+                <li>Klik tombol <strong className="text-indigo-600 dark:text-indigo-400">"Buat Laporan"</strong> di dasbor Anda.</li>
+                <li>Isi judul, pilih kategori, dan tulis deskripsi masalah yang Anda temui dengan jelas.</li>
+                <li>Unggah foto bukti (opsional namun sangat disarankan untuk memudahkan tindak lanjut).</li>
+                <li>Centang <strong className="text-indigo-600 dark:text-indigo-400">"Kirim laporan secara anonim"</strong> jika ingin merahasiakan identitas Anda.</li>
+                <li>Klik <strong className="text-indigo-600 dark:text-indigo-400">"Kirim"</strong>. Laporan Anda akan masuk dalam status <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-xs font-bold">Menunggu</span> dan akan segera diproses.</li>
+              </ol>
+              <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <h3 className="font-semibold text-slate-800 dark:text-white flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-500" /> Mengapa Menggunakan Laporan Anonim?
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Fitur pelaporan anonim dirancang untuk melindungi privasi Anda. Gunakan opsi ini saat melaporkan isu-isu sensitif agar Anda merasa lebih aman dan nyaman. Meskipun identitas Anda disembunyikan, laporan Anda tetap menjadi prioritas kami dan akan ditindaklanjuti secara profesional oleh pihak kampus.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

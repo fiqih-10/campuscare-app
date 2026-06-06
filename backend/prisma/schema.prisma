@@ -11,9 +11,10 @@ model User {
   id        String   @id @default(uuid())
   username  String   @unique
   password  String
-  role      Role     @default(STUDENT)
+  role      Role       @default(STUDENT)
   reports   Report[]
-  createdAt DateTime @default(now())
+  feedbacks Feedback[]
+  createdAt DateTime   @default(now())
 }
 
 model Report {
@@ -40,4 +41,12 @@ enum Status {
   PENDING
   PROCESSING
   RESOLVED
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  message   String   @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

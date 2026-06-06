@@ -159,32 +159,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-            <FileText className="w-6 h-6" />
-            Panduan Singkat: Cara Membuat Laporan
-          </h2>
-          <ol className="list-decimal list-inside space-y-2 mb-5 text-sm md:text-base text-indigo-50">
-            <li>Klik tombol <strong className="text-white">"Buat Laporan"</strong>.</li>
-            <li>Isi judul, pilih kategori, dan tulis deskripsi masalah yang Anda temui.</li>
-            <li>Unggah foto bukti (opsional namun sangat disarankan untuk memudahkan tindak lanjut).</li>
-            <li>Centang <strong className="text-white">"Kirim laporan secara anonim"</strong> jika ingin merahasiakan identitas Anda.</li>
-            <li>Klik <strong className="text-white">"Kirim"</strong>. Laporan Anda akan masuk dalam status <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-xs font-bold">Menunggu</span> dan akan segera diproses.</li>
-          </ol>
-          <div className="bg-white/10 p-4 rounded-xl backdrop-blur-md border border-white/20">
-            <h3 className="font-semibold text-sm md:text-base flex items-center gap-2 text-white">
-              <CheckCircle2 className="w-5 h-5" /> Mengapa Menggunakan Laporan Anonim?
-            </h3>
-            <p className="text-xs md:text-sm text-indigo-50 mt-2 leading-relaxed">
-              Fitur pelaporan anonim dirancang untuk melindungi privasi Anda. Gunakan opsi ini saat melaporkan isu-isu sensitif agar Anda merasa lebih aman dan nyaman. Meskipun identitas Anda disembunyikan, laporan Anda tetap menjadi prioritas kami dan akan ditindaklanjuti secara profesional.
-            </p>
-          </div>
-        </div>
-        <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
-          <FileText className="w-64 h-64" />
-        </div>
-      </div>
+
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors">
         <div>

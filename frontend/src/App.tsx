@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import StudentDashboard from './pages/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
+import AdminFeedbacks from './pages/AdminFeedbacks';
 
 const ProtectedRoute = ({ children, allowedRole }: { children: React.ReactNode, allowedRole?: string }) => {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ function AppRoutes() {
           <Route path="dashboard" element={<ProtectedRoute allowedRole="STUDENT"><StudentDashboard /></ProtectedRoute>} />
           <Route path="admin" element={<ProtectedRoute allowedRole="ADMIN"><AdminDashboard /></ProtectedRoute>} />
           <Route path="admin/users" element={<ProtectedRoute allowedRole="ADMIN"><AdminUsers /></ProtectedRoute>} />
+          <Route path="admin/feedbacks" element={<ProtectedRoute allowedRole="ADMIN"><AdminFeedbacks /></ProtectedRoute>} />
         </Route>
       </Routes>
     </BrowserRouter>
